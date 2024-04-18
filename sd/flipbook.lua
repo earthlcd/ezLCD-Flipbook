@@ -25,21 +25,25 @@ function ButtonHandler(id,state)
 	--print("data -", id," ", state, "pressed",pressed) --print id and state for diagn.
 	--print("\r\n")
 
-	if ( id == 0 and state==2) then
-        -- check for button released
-        Book = Book + 1
+    -- state == 2 is check for button released
+    if (state==2) then
+        if ( id == 0 ) then
+            Book = Book - 1
+        end
+        if ( id == 1 ) then
+            Book = Book + 1
+        end
+        if ( id == 2 ) then
+            count = 0
+        end
         Pressed = 1
-	end
-	if ( id == 1 and state==2) then
-        -- check for button released
-        count = 0
-        Pressed = 1
-	end
+    end
 end
 
-ez.Button(0,1,-1,-1,-1,0,0,320,199)	-- set up button
-ez.Button(1,1,-1,-1,-1,0,200,80,240)	-- set up button
-ez.SetButtonEvent("ButtonHandler")	-- call the button function (above)
+ez.Button(0,1,-1,-1,-1,0,0,169,199)	    -- set up button
+ez.Button(1,1,-1,-1,-1,170,0,320,199)   -- set up button
+ez.Button(2,1,-1,-1,-1,0,200,80,240)    -- set up button
+ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 ez.Cls(ez.RGB(255,255,255))
 Book = 1
@@ -58,8 +62,10 @@ count = 1
         flipbook("/flip/case/", 1, 250, 1)
     elseif Book == 5 then
         flipbook("/flip/base/", 1, 720, 1)
-    else
+    elseif Book > 5 then
         Book = 1
+    else
+        Book = 5
     end
     Pressed = 0
 if count == 0 then
@@ -69,4 +75,9 @@ end
 goto Start
 ::Stop::
 ez.Cls(ez.RGB(0,0,255))
-
+print("")
+print("Flipbook script has ended")
+print("")
+print("Touching the bottom left screen corner")
+print("cuases ezLCD to alert host computer")
+print("that the onboard SD card is writable")
