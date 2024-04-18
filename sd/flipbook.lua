@@ -74,8 +74,13 @@ end
 -- count = count - 1
 goto Start
 ::Stop::
+
+-- Clear the screen and make it blue
 ez.Cls(ez.RGB(0,0,255))
+-- Make the font a blue-ish white color
 ez.SetColor(ez.RGB(200,200,255))
+
+-- Display a message to the user on the LCD
 print("")
 print("Flipbook script has ended")
 print("")
