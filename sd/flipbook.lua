@@ -75,6 +75,7 @@ end
 goto Start
 ::Stop::
 ez.Cls(ez.RGB(0,0,255))
+ez.SetColor(ez.RGB(200,200,255))
 print("")
 print("Flipbook script has ended")
 print("")
