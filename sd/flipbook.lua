@@ -45,9 +45,27 @@ function ButtonHandler(id,state)
     end
 end
 
-ez.Button(0,1,-1,-1,-1,0,0,169,199)	    -- set up button
-ez.Button(1,1,-1,-1,-1,170,0,320,199)   -- set up button
-ez.Button(2,1,-1,-1,-1,0,200,80,240)    -- set up button
+-- Button 0 (Top Left)
+B0x1 = 0
+B0y1 = 0
+B0x2 = (ez.Width // 2) - 1
+B0y2 = ez.Height - 41
+
+-- Button 1 (Top Right)
+B1x1 = ez.Width // 2
+B1y1 = 0
+B1x2 = ez.Width
+B1y2 = ez.Height - 41
+
+-- Button 2 (Bottom Left)
+B2x1 = 0
+B2y1 = ez.Height - 40
+B2x2 = 80
+B2y2 = ez.Height
+
+ez.Button(0,1,-1,-1,-1,B0x1,B0y1,B0x2,B0y2)	-- set up button
+ez.Button(1,1,-1,-1,-1,B1x1,B1y1,B1x2,B1y2) -- set up button
+ez.Button(2,1,-1,-1,-1,B2x1,B2y1,B1x2,B1y2) -- set up button
 ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 ez.Cls(ez.RGB(255,255,255))
