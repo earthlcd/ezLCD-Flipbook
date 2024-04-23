@@ -1,6 +1,11 @@
 -- 'flipbook' 2/17/2024 play group of images as short motion sequence
 -- todo: use timer to calculate frames per second
 
+-- Path for ezLCD-5035 (320x240 images)
+path = "/flip/"
+-- Path for ezLCD-105 (800x600 images)
+--path = "/flip800x600/"
+
 function flipbook(path, frame_start, frame_end, loops)
     local delay  = 1		-- set frame delay in milliseconds
     for loop = 1, loops, 1
@@ -50,18 +55,18 @@ Book = 1
 count = 1
 ::Start::
     if Book == 1 then
-        flipbook("/flip/bconla/", 1, 250, 2)
-        flipbook("/flip/case/", 1, 250, 2)
-        flipbook("/flip/base/", 1, 720, 1)
-        flipbook("/flip/toy/", 1, 250, 2)
+        flipbook(path .. "bconla/", 1, 250, 2)
+        flipbook(path .. "case/", 1, 250, 2)
+        flipbook(path .. "base/", 1, 720, 1)
+        flipbook(path .. "toy/", 1, 250, 2)
     elseif Book == 2 then
-        flipbook("/flip/bconla/", 1, 250, 1)
+        flipbook(path .. "bconla/", 1, 250, 1)
     elseif Book == 3 then
-        flipbook("/flip/toy/", 1, 250, 1)
+        flipbook(path .. "toy/", 1, 250, 1)
     elseif Book == 4 then
-        flipbook("/flip/case/", 1, 250, 1)
+        flipbook(path .. "case/", 1, 250, 1)
     elseif Book == 5 then
-        flipbook("/flip/base/", 1, 720, 1)
+        flipbook(path .. "base/", 1, 720, 1)
     elseif Book > 5 then
         Book = 1
     else
