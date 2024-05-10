@@ -1,12 +1,31 @@
--- 'flipbook' 2/17/2024 play group of images as short motion sequence
--- todo: use timer to calculate frames per second
+-- 'slideshow' 5/10/2024 click through a group of images
 
+-- How to use:
+-- 1. Set the path to your slideshow
 -- Path for ezLCD-5035 (320x240 images)
 path = "/flip/"
 -- Path for ezLCD-105 (800x600 images)
 --path = "/flip800x600/"
 -- Path for ezLCD-2023 (320x480 images)
 --path = "/flip320x480/"
+
+-- 2. Set the following:
+--    a. string matching pattern for your show
+--    b. first frame in your show
+--    c. last frame in your show
+--    d. the number of frames to advance in your show.
+-- Create array of flipbooks with parameters passed to the flipbook function
+-- { format_string, frame_start, frame_end, inc }
+ss = {
+    --{ path .. "bconla/%04d.jpg", 1, 250, 12 },
+    --{ path .. "case/%04d.jpg",   1, 250, 12 },
+    { path .. "base/%04d.jpg",   1, 720, 36 },
+    --{ path .. "toy/%04d.jpg",    1, 250, 12 },
+    --{ path .. "RVid/frame-%06d.jpg", 0, 2438, 5 }, --2438
+}
+
+-- 3. Set the show number (if there is more than one defined in ss)
+Show = 1
 
 --------------------------------------------------------------------------
 -- slideshow
@@ -55,21 +74,10 @@ ez.Button(2,1,-1,-1,-1,B2[1],B2[2],B1[3],B1[4]) -- set up button
 ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 
--- Create array of flipbooks with parameters passed to the flipbook function
--- { format_string, frame_start, frame_end, inc }
-ss = {
-    --{ path .. "bconla/%04d.jpg", 1, 250, 12 },
-    --{ path .. "case/%04d.jpg",   1, 250, 12 },
-    { path .. "base/%04d.jpg",   1, 720, 36 },
-    --{ path .. "toy/%04d.jpg",    1, 250, 12 },
-    --{ path .. "RVid/frame-%06d.jpg", 0, 2438, 5 }, --2438
-}
-
 function Main()
     ez.Cls(ez.RGB(255,255,255))
     --ez.PutPictFile(0, 0, path .. "RVid/frame-000066.jpg")
 
-    local show = 1
     local frame = 1
     Index = -1
     Running = 1
@@ -81,9 +89,9 @@ function Main()
             ez.Cls(ez.RGB(64,64,64))
             ez.SetColor(ez.RGB(200,200,255))
             ez.SetXY(10,10)
-            print (string.format("Slideshow #$d:", show))
+            print (string.format("Slideshow #$d:", Show))
             for b = 1, #ss do
-                print("   " .. ss[show][1])
+                print("   " .. ss[Show][1])
             end
             print("   ")
             print("   Touch top right / left corners")
@@ -93,14 +101,14 @@ function Main()
             while Pressed == 0 do
                 ez.Wait_ms(10)	-- do nothing
             end
-        elseif Index <= ss[show][3] // ss[show][4] then
-            Frame = ss[show][2] + (Index * ss[show][4])
-            if Frame > ss[show][3] then
+        elseif Index <= ss[Show][3] // ss[Show][4] then
+            Frame = ss[Show][2] + (Index * ss[Show][4])
+            if Frame > ss[Show][3] then
                 Index = 0
-                Frame = ss[show][2] + (Index * ss[show][4])
+                Frame = ss[Show][2] + (Index * ss[Show][4])
             end
-            slideshow(ss[show][1], Frame )
-        elseif Index > ss[show][3] // ss[show][4] then
+            slideshow(ss[Show][1], Frame )
+        elseif Index > ss[Show][3] // ss[Show][4] then
             Index = 1
         else
             Index = #fb
