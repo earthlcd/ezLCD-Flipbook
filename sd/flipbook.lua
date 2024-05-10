@@ -5,6 +5,8 @@
 path = "/flip/"
 -- Path for ezLCD-105 (800x600 images)
 --path = "/flip800x600/"
+-- Path for ezLCD-2023 (320x480 images)
+--path = "/flip320x480/"
 
 function flipbook(path, frame_start, frame_end, loops)
     local delay  = 1		-- set frame delay in milliseconds
