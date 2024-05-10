@@ -56,7 +56,7 @@ ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 
 -- Create array of flipbooks with parameters passed to the flipbook function
--- { format_string, frame_start, frame_end, inc, loops, delay_ms }
+-- { format_string, frame_start, frame_end, inc }
 ss = {
     --{ path .. "bconla/%04d.jpg", 1, 250, 12 },
     --{ path .. "case/%04d.jpg",   1, 250, 12 },
