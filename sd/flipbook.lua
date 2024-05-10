@@ -8,22 +8,32 @@ path = "/flip/"
 -- Path for ezLCD-2023 (320x480 images)
 --path = "/flip320x480/"
 
-function flipbook(path, frame_start, frame_end, loops)
-    local delay  = 1		-- set frame delay in milliseconds
+--------------------------------------------------------------------------
+-- flipbook
+--------------------------------------------------------------------------
+-- format_string: string that defines how the file name of the flipbook is built
+--    for example if the path + file name is /flip/sub/name-0001.jpg then your 
+--    format string should be /flip/sub/name-%04d.jpg.
+-- frame_start: the first numerical frame in the flipbook.
+-- frame_end: the last numerical frame in the flipbook.
+-- inc: the number of frames to advance after displaying each frame
+-- loops: the number of times to display this flipbook
+-- delay_ms: interframe delay in ms
+function flipbook(format_string, frame_start, frame_end, inc, loops, delay_ms)
     for loop = 1, loops, 1
     do
         if Pressed == 1 then
             break
         end
-        for frame = frame_start, frame_end, 1
+        for frame = frame_start, frame_end, inc
         do
             if Pressed == 1 then
                 break
             end
             -- draw image n (can be bmp or jpg) jpg will be much faster
-            local filename = string.format("%s%04d.jpg", path, frame)
+            local filename = string.format(format_string, frame)
             ez.PutPictFile(0,0,filename)
-            ez.Wait_ms(delay)	-- delay display of next frame
+            ez.Wait_ms(delay_ms)	-- delay display of next frame
         end
     end
 end
@@ -47,46 +57,46 @@ function ButtonHandler(id,state)
     end
 end
 
--- Button 0 (Top Left)
-B0x1 = 0
-B0y1 = 0
-B0x2 = (ez.Width // 2) - 1
-B0y2 = ez.Height - 41
+-- Button 0 (Top Left) { x1, y1, x2, y2 }
+B0 = { 0, 0, (ez.Width // 2) - 1, ez.Height - 41 }
 
--- Button 1 (Top Right)
-B1x1 = ez.Width // 2
-B1y1 = 0
-B1x2 = ez.Width
-B1y2 = ez.Height - 41
+-- Button 1 (Top Right) { x1, y1, x2, y2 }
+B1 = { ez.Width // 2, 0, ez.Width, ez.Height - 41 }
 
--- Button 2 (Bottom Left)
-B2x1 = 0
-B2y1 = ez.Height - 40
-B2x2 = 80
-B2y2 = ez.Height
+-- Button 2 (Bottom Left) { x1, y1, x2, y2 }
+B2 = { 0, ez.Height - 40, 80, ez.Height }
 
-ez.Button(0,1,-1,-1,-1,B0x1,B0y1,B0x2,B0y2)	-- set up button
-ez.Button(1,1,-1,-1,-1,B1x1,B1y1,B1x2,B1y2) -- set up button
-ez.Button(2,1,-1,-1,-1,B2x1,B2y1,B1x2,B1y2) -- set up button
+ez.Button(0,1,-1,-1,-1,B0[1],B0[2],B0[3],B0[4])	-- set up button
+ez.Button(1,1,-1,-1,-1,B1[1],B1[2],B1[3],B1[4]) -- set up button
+ez.Button(2,1,-1,-1,-1,B2[1],B2[2],B1[3],B1[4]) -- set up button
 ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 ez.Cls(ez.RGB(255,255,255))
-Book = 1
+Book = 0
 count = 1
 ::Start::
-    if Book == 1 then
-        flipbook(path .. "bconla/", 1, 250, 2)
-        flipbook(path .. "case/", 1, 250, 2)
-        flipbook(path .. "base/", 1, 720, 1)
-        flipbook(path .. "toy/", 1, 250, 2)
+    if Book == 0 then
+        ez.Cls(ez.RGB(255,0,255))
+        ez.SetColor(ez.RGB(200,200,255))
+		ez.SetXY(10,10)
+		print ("Flipbook for:" .. path)
+        --flipbook(path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0) --2438
+        --ez.PutPictFile(0, 0, path .. "RVid/frame-000066.jpg")
+        ez.Wait_ms(5000)	-- delay display of next frame
+        Book = 1
+    elseif Book == 1 then
+        flipbook(path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1)
+        flipbook(path .. "case/%04d.jpg", 1, 250, 1, 2, 1)
+        flipbook(path .. "base/%04d.jpg", 1, 720, 1, 1, 1)
+        flipbook(path .. "toy/%04d.jpg", 1, 250, 1, 2, 1)
     elseif Book == 2 then
-        flipbook(path .. "bconla/", 1, 250, 1)
+        flipbook(path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1)
     elseif Book == 3 then
-        flipbook(path .. "toy/", 1, 250, 1)
+        flipbook(path .. "toy/%04d.jpg", 1, 250, 1, 1, 1)
     elseif Book == 4 then
-        flipbook(path .. "case/", 1, 250, 1)
+        flipbook(path .. "case/%04d.jpg", 1, 250, 1, 1, 1)
     elseif Book == 5 then
-        flipbook(path .. "base/", 1, 720, 1)
+        flipbook(path .. "base/%04d.jpg", 1, 720, 1, 1, 1)
     elseif Book > 5 then
         Book = 1
     else
