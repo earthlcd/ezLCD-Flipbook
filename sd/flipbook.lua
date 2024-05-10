@@ -71,36 +71,48 @@ ez.Button(1,1,-1,-1,-1,B1[1],B1[2],B1[3],B1[4]) -- set up button
 ez.Button(2,1,-1,-1,-1,B2[1],B2[2],B1[3],B1[4]) -- set up button
 ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
+
+-- Create array of flipbooks with parameters passed to the flipbook function
+-- { format_string, frame_start, frame_end, inc, loops, delay_ms }
+fb = {
+    { path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1 },
+    { path .. "case/%04d.jpg",   1, 250, 1, 2, 1 },
+    { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
+    { path .. "toy/%04d.jpg",    1, 250, 1, 2, 1 }
+}
+
 ez.Cls(ez.RGB(255,255,255))
-Book = 0
+Book = -1
 count = 1
 ::Start::
-    if Book == 0 then
-        ez.Cls(ez.RGB(255,0,255))
+    if Book < -1 then
+        Book = -1
+    elseif Book == -1 then
+        ez.Cls(ez.RGB(128,0,128))
         ez.SetColor(ez.RGB(200,200,255))
 		ez.SetXY(10,10)
-		print ("Flipbook for:" .. path)
+		print ("Flipbook for:")
+        for b = 1, #fb do
+            print("   " .. fb[b][1])
+        end
         --flipbook(path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0) --2438
         --ez.PutPictFile(0, 0, path .. "RVid/frame-000066.jpg")
-        ez.Wait_ms(5000)	-- delay display of next frame
-        Book = 1
-    elseif Book == 1 then
-        flipbook(path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1)
-        flipbook(path .. "case/%04d.jpg", 1, 250, 1, 2, 1)
-        flipbook(path .. "base/%04d.jpg", 1, 720, 1, 1, 1)
-        flipbook(path .. "toy/%04d.jpg", 1, 250, 1, 2, 1)
-    elseif Book == 2 then
-        flipbook(path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1)
-    elseif Book == 3 then
-        flipbook(path .. "toy/%04d.jpg", 1, 250, 1, 1, 1)
-    elseif Book == 4 then
-        flipbook(path .. "case/%04d.jpg", 1, 250, 1, 1, 1)
-    elseif Book == 5 then
-        flipbook(path .. "base/%04d.jpg", 1, 720, 1, 1, 1)
-    elseif Book > 5 then
+
+        -- Wait for a button press
+        while Pressed == 0 do
+            ez.Wait_ms(10)	-- do nothing
+        end
+        -- Book = 0
+    elseif Book == 0 then
+        for b = 1, #fb do
+            flipbook(fb[b][1], fb[b][2], fb[b][3], fb[b][4], fb[b][5], fb[b][6])
+        end
+    elseif Book <= #fb then
+        flipbook(fb[Book][1], fb[Book][2], fb[Book][3], fb[Book][4], fb[Book][5], fb[Book][6])
+    elseif Book > #fb then
         Book = 1
     else
-        Book = 5
+        Book = #fb
     end
     Pressed = 0
 if count == 0 then
