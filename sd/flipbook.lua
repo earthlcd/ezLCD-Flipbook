@@ -51,7 +51,7 @@ function ButtonHandler(id,state)
             Book = Book + 1
         end
         if ( id == 2 ) then
-            count = 0
+            Running = 0
         end
         Pressed = 1
     end
@@ -78,59 +78,61 @@ fb = {
     { path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1 },
     { path .. "case/%04d.jpg",   1, 250, 1, 2, 1 },
     { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
-    { path .. "toy/%04d.jpg",    1, 250, 1, 2, 1 }
+    { path .. "toy/%04d.jpg",    1, 250, 1, 2, 1 },
+    --{ path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0 }, --2438
 }
 
-ez.Cls(ez.RGB(255,255,255))
-Book = -1
-count = 1
-::Start::
-    if Book < -1 then
-        Book = -1
-    elseif Book == -1 then
-        ez.Cls(ez.RGB(128,0,128))
-        ez.SetColor(ez.RGB(200,200,255))
-		ez.SetXY(10,10)
-		print ("Flipbook for:")
-        for b = 1, #fb do
-            print("   " .. fb[b][1])
-        end
-        --flipbook(path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0) --2438
-        --ez.PutPictFile(0, 0, path .. "RVid/frame-000066.jpg")
+function Main()
+    ez.Cls(ez.RGB(255,255,255))
+    --ez.PutPictFile(0, 0, path .. "RVid/frame-000066.jpg")
 
-        -- Wait for a button press
-        while Pressed == 0 do
-            ez.Wait_ms(10)	-- do nothing
+    Book = -1
+    Running = 1
+
+    while Running == 1 do
+        if Book < -1 then
+            Book = -1
+        elseif Book == -1 then
+            ez.Cls(ez.RGB(128,0,128))
+            ez.SetColor(ez.RGB(200,200,255))
+            ez.SetXY(10,10)
+            print ("Flipbook for:")
+            for b = 1, #fb do
+                print("   " .. fb[b][1])
+            end
+
+            -- Wait for a button press
+            while Pressed == 0 do
+                ez.Wait_ms(10)	-- do nothing
+            end
+        elseif Book == 0 then
+            for b = 1, #fb do
+                flipbook(fb[b][1], fb[b][2], fb[b][3], fb[b][4], fb[b][5], fb[b][6])
+            end
+        elseif Book <= #fb then
+            flipbook(fb[Book][1], fb[Book][2], fb[Book][3], fb[Book][4], fb[Book][5], fb[Book][6])
+        elseif Book > #fb then
+            Book = 1
+        else
+            Book = #fb
         end
-        -- Book = 0
-    elseif Book == 0 then
-        for b = 1, #fb do
-            flipbook(fb[b][1], fb[b][2], fb[b][3], fb[b][4], fb[b][5], fb[b][6])
-        end
-    elseif Book <= #fb then
-        flipbook(fb[Book][1], fb[Book][2], fb[Book][3], fb[Book][4], fb[Book][5], fb[Book][6])
-    elseif Book > #fb then
-        Book = 1
-    else
-        Book = #fb
+        Pressed = 0
     end
-    Pressed = 0
-if count == 0 then
-    goto Stop
+
+    -- Clear the screen and make it blue
+    ez.Cls(ez.RGB(0,0,255))
+    -- Make the font a blue-ish white color
+    ez.SetColor(ez.RGB(200,200,255))
+
+    -- Display a message to the user on the LCD
+    print("")
+    print("Flipbook script has ended")
+    print("")
+    print("Touching the bottom left screen corner")
+    print("cuases ezLCD to alert host computer")
+    print("that the onboard SD card is writable")
+
 end
--- count = count - 1
-goto Start
-::Stop::
 
--- Clear the screen and make it blue
-ez.Cls(ez.RGB(0,0,255))
--- Make the font a blue-ish white color
-ez.SetColor(ez.RGB(200,200,255))
+Main()
 
--- Display a message to the user on the LCD
-print("")
-print("Flipbook script has ended")
-print("")
-print("Touching the bottom left screen corner")
-print("cuases ezLCD to alert host computer")
-print("that the onboard SD card is writable")
