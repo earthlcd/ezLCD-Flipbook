@@ -55,7 +55,7 @@ ADC_CHANNEL = 5
 ADC_Value = ADC_MAX / 2
 
 function MeterFlipbook(format_string, frame_start, frame_end, delay_ms)
-    ADC_Value = ez.ADCGetValue(ADC_CHANNEL) * 0.9 + ADC_Value * 0.10
+    ADC_Value = ez.ADCGetValue(ADC_CHANNEL) * 0.7 + ADC_Value * 0.3
     --ADC_Value = ez.ADCGetValue(ADC_CHANNEL)
 
     local frame = math.floor((ADC_Value * (frame_end - frame_start) / ADC_MAX) + frame_start)
@@ -112,6 +112,7 @@ fb = {
     { path .. "case/%04d.jpg",   1, 250, 1, 2, 1 },
     { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
     { path .. "toy/%04d.jpg",    1, 250, 1, 2, 1 },
+    { "gas/g-%d.jpg",    0, 29, 1, 2, 1 },
     --{ path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0 }, --2438
 }
 
