@@ -52,16 +52,14 @@ ADC_StopPort = 12
 ADC_Ports = ADC_StopPort + 1
 ADC_MAX = 4095.0
 ADC_CHANNEL = 5
+ADC_Value = ADC_MAX / 2
 
 function MeterFlipbook(format_string, frame_start, frame_end, delay_ms)
-    -- value = ez.ADCGetValue(ADC_CHANNEL) * 0.9 + value * 0.10
-    local value = ez.ADCGetValue(ADC_CHANNEL)
+    ADC_Value = ez.ADCGetValue(ADC_CHANNEL) * 0.9 + ADC_Value * 0.10
+    --ADC_Value = ez.ADCGetValue(ADC_CHANNEL)
 
-    ez.SetXY(10,10)
-    print(string.format("ADC %2d: %4d, start: %d, stop: %d", ADC_CHANNEL, value, frame_start, frame_end))
-
-    local frame = math.floor(value * (frame_end - frame_start) / ADC_MAX) + frame_start
-    print(string.format("frame %d", frame))
+    local frame = math.floor((ADC_Value * (frame_end - frame_start) / ADC_MAX) + frame_start)
+    -- print(string.format("frame %d", frame))
 
     -- draw image n (can be bmp or jpg) jpg will be much faster
     local filename = string.format(format_string, frame)
@@ -69,8 +67,9 @@ function MeterFlipbook(format_string, frame_start, frame_end, delay_ms)
     ez.Wait_ms(delay_ms)	-- delay display of next frame
 
     ez.SetXY(0,0)
+    print(string.format("ADC %2d: %4d, start: %d, stop: %d", ADC_CHANNEL, math.floor(ADC_Value), frame_start, frame_end))
     print(string.format("filename %s", filename))
-    -- print(string.format(" ADC %2d: %4d", ADC_CHANNEL, value))
+    -- print(string.format(" ADC %2d: %4d", ADC_CHANNEL, ADC_Value))
 end
 
 function ButtonHandler(id,state)
