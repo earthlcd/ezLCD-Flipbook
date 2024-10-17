@@ -75,10 +75,11 @@ ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 -- Create array of flipbooks with parameters passed to the flipbook function
 -- { format_string, frame_start, frame_end, inc, loops, delay_ms }
 fb = {
-    { path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1 },
+    { path .. "hackaday/%04d.jpg", 1, 250, 1, 2, 1 },
     { path .. "case/%04d.jpg",   1, 250, 1, 2, 1 },
-    { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
     { path .. "toy/%04d.jpg",    1, 250, 1, 2, 1 },
+    { path .. "pitch/%04d.jpg", 1, 500, 1, 2, 1 },
+    { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
     --{ path .. "RVid/frame-%06d.jpg", 0, 2438, 5, 1, 0 }, --2438
 }
 
@@ -131,6 +132,10 @@ function Main()
     print("Touching the bottom left screen corner")
     print("cuases ezLCD to alert host computer")
     print("that the onboard SD card is writable")
+    print("")
+    print("")
+    print("")
+    print("Cycle power to restart script")
 
 end
 
