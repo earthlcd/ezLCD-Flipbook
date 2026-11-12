@@ -10,6 +10,17 @@
 --
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+--- Customize this program in three ez steps. Search for the "Step" 
+--- below and follow the instructions at each step.  Then load this
+--- program and the flipbooks onto the SD card of your ezLCD.
+---------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Step 1: Select the path to get the flipbooks from.  The path is
+-- from the root directory of the SD card for the ezLCD
+----------------------------------------------------------------------
+
 -- Path for ezLCD-5035 (320x240 images)
 path = "/flip/"
 -- Path for ezLCD-105 (800x600 images)
@@ -17,18 +28,10 @@ path = "/flip/"
 -- Path for ezLCD-2023 (320x480 images)
 --path = "/flip320x480/"
 
---------------------------------------------------------------------------
--- flipbook
---------------------------------------------------------------------------
--- format_string: string that defines how the file name of the flipbook is built
---    for example if the path + file name is /flip/sub/name-0001.jpg then your
---    format string should be /flip/sub/name-%04d.jpg.
--- frame_start: the first numerical frame in the flipbook.
--- frame_end: the last numerical frame in the flipbook.
--- inc: the number of frames to advance after displaying each frame
--- loops: the number of times to display this flipbook
--- delay_ms: interframe delay in ms
-
+----------------------------------------------------------------------
+-- Step 2: Select the ACD_CHANNEL to read the voltage from using the
+-- chart below to determine which pin to use.
+----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 -- *** ezLCD-5035 ADC Pin Definitions ***
@@ -45,17 +48,29 @@ path = "/flip/"
 -- 10=Pin U1-16 (ADC1_In1_P) / Pin U1-15 (ADC1_In1_N) Differential
 -- 11=Pin U1-25 (SPI5_MOSI)
 -- 12=Pin U2-30 (GPIO 14)
+----------------------------------------------------------------------
 
 -- ADC Global Variables
+ADC_CHANNEL = 5
 ADC_StartPort = 0
 ADC_StopPort = 12
 ADC_Ports = ADC_StopPort + 1
 ADC_MAX = 4095.0
-ADC_CHANNEL = 5
 ADC_Value = ADC_MAX / 2
 
+--------------------------------------------------------------------------
+-- MeterFlipbook
+--------------------------------------------------------------------------
+-- format_string: string that defines how the file name of the flipbook is built
+--    for example if the path + file name is /flip/sub/name-0001.jpg then your
+--    format string should be /flip/sub/name-%04d.jpg.
+-- frame_start: the first numerical frame in the flipbook.
+-- frame_end: the last numerical frame in the flipbook.
+-- delay_ms: interframe delay in ms
+
 function MeterFlipbook(format_string, frame_start, frame_end, delay_ms)
-    ADC_Value = ez.ADCGetValue(ADC_CHANNEL) * 0.7 + ADC_Value * 0.3
+    local weighted_average = 0.7
+    ADC_Value = ez.ADCGetValue(ADC_CHANNEL) * weighted_average + ADC_Value * (1 - weighted_average)
     --ADC_Value = ez.ADCGetValue(ADC_CHANNEL)
 
     local frame = math.floor((ADC_Value * (frame_end - frame_start) / ADC_MAX) + frame_start)
@@ -105,9 +120,25 @@ ez.Button(2,1,-1,-1,-1,B2[1],B2[2],B1[3],B1[4]) -- set up button
 ez.SetButtonEvent("ButtonHandler")	    -- call the button function (above)
 
 
+-----------------------------------------------------------------------------------------------
+-- Step 3: Select folder(s) to read the flipbooks from and the parameters for each flipbook
+-----------------------------------------------------------------------------------------------
+-- Parameter 1: What does { path .. "bconla/%04d.jpg" work?, 1, 250, 1, 2, 1 } mean?
+-- path is the path to the flipbook folders from Step 1
+-- bconla is the folder name that contains the flipbook images
+-- %04d is the format string that defines how many digits are in the flipbook fliename.
+--
+-- Parameters 2 and 3: 1, 250 are the start and end frame numbers of the flipbook
+--
+-- Parameters 4 and 5: 1, 2 is the increment and number of loops to play the flipbook (not used in MeterFlipbook)
+--
+-- Parameter 6: 1 is the delay in ms between frames
+-----------------------------------------------------------------------------------------------
+
 -- Create array of flipbooks with parameters passed to the flipbook function
 -- { format_string, frame_start, frame_end, inc, loops, delay_ms }
 fb = {
+    { path .. "meter-30VDC/%04d.jpg", 0, 511, 1, 2, 1 },
     { path .. "bconla/%04d.jpg", 1, 250, 1, 2, 1 },
     { path .. "case/%04d.jpg",   1, 250, 1, 2, 1 },
     { path .. "base/%04d.jpg",   1, 720, 1, 1, 1 },
